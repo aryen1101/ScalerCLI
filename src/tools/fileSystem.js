@@ -44,12 +44,12 @@ export async function listDirectory(dirPath = "") {
             return `${resPath} is empty.`
         }
 
-        const listting = list.map((l) => (l.isDirectory() ? `Folder ${l.name}` : `File ${l.name}`)).join("\n");
+        const listing = list.map((l) => (l.isDirectory() ? `Folder ${l.name}` : `File ${l.name}`)).join("\n");
 
-        return `Contents of ${resolved}:\n${listing}`;
+        return `Contents of ${resPath}:\n${listing}`;
     }
     catch (error) {
-    return `Failed to list directory ${dirPathPath} : ${error.message}`;
+    return `Failed to list directory ${dirPath} : ${error.message}`;
   }
     
 }
