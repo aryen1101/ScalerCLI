@@ -1,0 +1,25 @@
+{
+  "name": "cliagent",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000S\u0000c\u0000a\u0000l\u0000e\u0000r\u0000C\u0000L\u0000I\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aryen1101/ScalerCLI.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aryen1101/ScalerCLI/issues"
+  },
+  "homepage": "https://github.com/aryen1101/ScalerCLI#readme",
+  "dependencies": {
+    "axios": "^1.16.0",
+    "dotenv": "^17.4.2",
+    "openai": "^6.36.0"
+  }
+}
