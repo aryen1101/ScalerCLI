@@ -1,22 +1,33 @@
+import "dotenv/config"
 import { OpenAI } from "openai";
 import { tool_map } from "./tools/index.js";
 import { SYSTEM_PROMPT } from "./prompts/system_prompts.js";
 
 const client = new OpenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+  apiKey: process.env.OpenAI_API_KEY,
 });
 
 async function executeTool(tool_name, tool_args) {
   const tool = tool_map[tool_name];
   if (!tool) return `Unknown Tool: ${tool_name}`;
 
-  if (tool_name === "createFile") {
-    const parsed = typeof tool_args === "string" ? JSON.parse(tool_args) : tool_args;
-    return await tool(parsed.path, parsed.content);
+  let parsedArgs = tool_args;
+  if (typeof tool_args === "string" && (tool_args.startsWith("{") || tool_args.startsWith("["))) {
+    try { parsedArgs = JSON.parse(tool_args); } catch (e) {}
   }
 
-  return await tool(tool_args);
+  if (tool_name === "createFile") {
+    const filePath = parsedArgs.path || parsedArgs.filePath;
+    return await tool(filePath, parsedArgs.content);
+  }
+
+  if (tool_name === "openInBrowser") {
+    const targetPath = typeof parsedArgs === "object" ? (parsedArgs.path || parsedArgs.filePath || Object.values(parsedArgs)[0]) : parsedArgs;
+    return await tool(targetPath);
+  }
+
+  const finalArg = typeof parsedArgs === "object" ? Object.values(parsedArgs)[0] : parsedArgs;
+  return await tool(finalArg);
 }
 
 function parseResponse(raw) {
@@ -24,7 +35,10 @@ function parseResponse(raw) {
     const cleaned = raw.replace(/```json|```/g, "").trim();
     return JSON.parse(cleaned);
   } catch {
-    return { step: "OUTPUT", content: raw };
+    return { 
+        step: "THINK", 
+        content: "SYSTEM WARNING: My previous output was invalid JSON (perhaps I output two objects at once or forgot to escape quotes). I must output exactly ONE valid JSON object." 
+    };
   }
 }
 
@@ -34,14 +48,14 @@ export async function runAgent(inputMessage) {
     { role: "user", content: inputMessage },
   ];
 
-  console.log("\n AGENT STARTED...\n");
+  console.log("\n\x1b[90m⚙️  Agent initialized. Thinking...\x1b[0m\n");
 
   let fileCreated = false;
   let thinkCount = 0;
 
   while (true) {
     const response = await client.chat.completions.create({
-      model: "gemini-3-flash-preview",
+      model: "gpt-5.5",
       messages,
     });
 
@@ -52,20 +66,17 @@ export async function runAgent(inputMessage) {
 
     if (parsed.step === "START") {
       thinkCount = 0;
-      console.log(`START: ${parsed.content}`);
+      console.log(`\x1b[34m[START]\x1b[0m ${parsed.content}`); 
     }
 
     else if (parsed.step === "THINK") {
       thinkCount++;
-      console.log(`THINK: ${parsed.content}`);
+      console.log(`\x1b[33m[THINK]\x1b[0m ${parsed.content}`); 
 
       if (thinkCount >= 3) {
         messages.push({
           role: "user",
-          content: JSON.stringify({
-            step: "OBSERVE",
-            content: "Stop thinking. You MUST now call createFile tool with the COMPLETE index.html content including all HTML, CSS and JS. Do not summarize — write the full code."
-          }),
+          content: "Stop thinking. You MUST now call createFile tool with the COMPLETE index.html content. Do not summarize."
         });
         thinkCount = 0;
       }
@@ -74,15 +85,28 @@ export async function runAgent(inputMessage) {
     else if (parsed.step === "TOOL") {
       if (parsed.tool_name === "createFile") fileCreated = true;
       thinkCount = 0;
-      console.log(`\n TOOL: ${parsed.tool_name}`);
-      console.log(`   args: ${parsed.tool_args}`);
+      
+      console.log(`\x1b[36m[TOOL]\x1b[0m  🛠️  Calling \x1b[1m${parsed.tool_name}\x1b[0m`); 
+
+      let displayArgs = parsed.tool_args;
+      if (parsed.tool_name === "createFile") {
+          displayArgs = "[HTML Code Hidden for UI Cleanliness]";
+      } else if (typeof displayArgs === "object") {
+          displayArgs = JSON.stringify(displayArgs);
+      }
+      console.log(`\x1b[90m        ↳ args: ${displayArgs}\x1b[0m`); 
 
       const result = await executeTool(parsed.tool_name, parsed.tool_args);
-      console.log(`OBSERVE: ${result}\n`);
+      
+      let displayResult = result;
+      if (typeof result === "string" && result.length > 150) {
+          displayResult = result.substring(0, 150) + "... [Truncated]";
+      }
+      console.log(`\x1b[32m[OBSERVE]\x1b[0m ${displayResult}\n`); 
 
       messages.push({
         role: "user",
-        content: JSON.stringify({ step: "OBSERVE", content: result }),
+        content: result, 
       });
     }
 
@@ -90,14 +114,11 @@ export async function runAgent(inputMessage) {
       if (!fileCreated) {
         messages.push({
           role: "user",
-          content: JSON.stringify({
-            step: "OBSERVE",
-            content: "You have NOT called createFile yet. index.html does not exist on disk. Your NEXT step MUST be TOOL with tool_name createFile. Write the full HTML now."
-          }),
+          content: "You have NOT called createFile yet. index.html does not exist on disk. Your NEXT step MUST be TOOL with tool_name createFile."
         });
         continue;
       }
-      console.log(`\n OUTPUT: ${parsed.content}\n`);
+      console.log(`\x1b[32m\x1b[1m[OUTPUT] 🎉 ${parsed.content}\x1b[0m\n`); 
       break;
     }
   }

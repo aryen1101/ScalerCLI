@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scaler Academy | Modern Software and AI Engineering</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-primary: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --color-bg: #ffffff;
+      --color-bg-soft: #f5f8ff;
+      --color-bg-cream: #fff9ef;
+      --color-text: #1a1a1a;
+      --color-black: #000000;
+      --color-muted: #444444;
+      --color-light-muted: #6b7280;
+      --color-border: #e6ecf5;
+      --color-primary: #0052cc;
+      --color-primary-dark: #003f9e;
+      --color-primary-soft: #e9f1ff;
+      --color-accent: #0f8cff;
+      --color-orange: #ffb547;
+      --color-green: #1faa59;
+      --color-footer: #101828;
+      --color-footer-text: #c8d0df;
+      --fs-xs: 12px;
+      --fs-sm: 14px;
+      --fs-base: 16px;
+      --fs-md: 18px;
+      --fs-lg: 22px;
+      --fs-xl: 32px;
+      --fs-hero: 64px;
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 28px;
+      --shadow-soft: 0 12px 35px rgba(16, 24, 40, 0.08);
+      --shadow-card: 0 18px 55px rgba(0, 82, 204, 0.12);
+      --container: 1180px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font-primary); color: var(--color-text); background: var(--color-bg); line-height: 1.5; overflow-x: hidden; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    button { font-family: inherit; }
+
+    .container { width: min(var(--container), calc(100% - 40px)); margin: 0 auto; }
+
+    header { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.86); backdrop-filter: blur(18px); border-bottom: 1px solid rgba(230,236,245,0.75); transition: box-shadow 0.2s ease, background 0.2s ease; }
+    header.scrolled { background: rgba(255,255,255,0.96); box-shadow: 0 10px 30px rgba(16,24,40,0.10); }
+    nav { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 24px; font-weight: 800; letter-spacing: -0.04em; color: var(--color-primary); }
+    .logo-mark { width: 34px; height: 34px; border-radius: 9px; background: linear-gradient(135deg, var(--color-primary), var(--color-accent)); display: grid; place-items: center; color: white; font-weight: 900; box-shadow: 0 10px 24px rgba(0,82,204,0.25); }
+    .nav-links { display: flex; align-items: center; gap: 28px; font-size: var(--fs-sm); font-weight: 700; color: var(--color-muted); }
+    .nav-links a, .footer a { transition: color 0.2s ease, transform 0.2s ease; }
+    .nav-links a:hover { color: var(--color-primary); transform: translateY(-1px); }
+    .nav-actions { display: flex; align-items: center; gap: 12px; }
+    .btn { border: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 20px; border-radius: var(--radius-sm); font-size: var(--fs-sm); font-weight: 800; transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, color 0.2s ease; white-space: nowrap; }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: #fff; background: var(--color-primary); box-shadow: 0 12px 26px rgba(0,82,204,0.22); }
+    .btn-primary:hover { background: var(--color-primary-dark); box-shadow: 0 16px 32px rgba(0,82,204,0.30); }
+    .btn-outline { color: var(--color-primary); background: #fff; border: 1px solid #bfd5ff; }
+    .btn-outline:hover { background: var(--color-primary-soft); }
+    .hamburger { display: none; width: 42px; height: 42px; border: 1px solid var(--color-border); border-radius: 12px; background: white; align-items: center; justify-content: center; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 20px; height: 2px; background: var(--color-text); border-radius: 99px; transition: 0.2s ease; }
+
+    .hero { position: relative; padding: 86px 0 72px; overflow: hidden; background: radial-gradient(circle at 15% 15%, #e8f1ff 0, transparent 28%), radial-gradient(circle at 90% 5%, #fff0d6 0, transparent 25%), linear-gradient(180deg, #ffffff 0%, #f7fbff 100%); }
+    .hero::before { content: ''; position: absolute; inset: auto -120px -170px auto; width: 420px; height: 420px; background: rgba(0,82,204,0.08); border-radius: 50%; filter: blur(12px); }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.07fr 0.93fr; gap: 54px; align-items: center; }
+    .eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid #d7e6ff; background: rgba(233,241,255,0.8); color: var(--color-primary); border-radius: 999px; font-size: var(--fs-xs); font-weight: 900; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 22px; }
+    .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--color-green); box-shadow: 0 0 0 5px rgba(31,170,89,0.12); }
+    h1 { font-size: var(--fs-hero); line-height: 0.98; letter-spacing: -0.065em; font-weight: 900; color: var(--color-black); max-width: 760px; }
+    .hero h1 span { color: var(--color-primary); }
+    .hero-text { margin-top: 24px; max-width: 660px; color: var(--color-muted); font-size: 19px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 36px; max-width: 670px; }
+    .stat { background: rgba(255,255,255,0.88); border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-soft); }
+    .stat strong { display: block; color: var(--color-black); font-size: 26px; letter-spacing: -0.04em; }
+    .stat span { display: block; margin-top: 4px; color: var(--color-light-muted); font-size: var(--fs-sm); font-weight: 600; }
+
+    .hero-card { background: rgba(255,255,255,0.94); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 26px; box-shadow: var(--shadow-card); position: relative; }
+    .hero-card-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 22px; }
+    .card-title { font-size: 24px; line-height: 1.15; font-weight: 900; letter-spacing: -0.04em; }
+    .live-badge { color: #9a5c00; background: #fff2cf; border: 1px solid #ffe0a3; border-radius: 999px; padding: 7px 10px; font-size: var(--fs-xs); font-weight: 900; white-space: nowrap; }
+    .form-card { display: grid; gap: 12px; }
+    .input { width: 100%; border: 1px solid var(--color-border); border-radius: 12px; padding: 14px 14px; font-size: var(--fs-sm); color: var(--color-text); outline: none; transition: border 0.2s ease, box-shadow 0.2s ease; background: #fff; }
+    .input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(0,82,204,0.10); }
+    .card-note { font-size: var(--fs-xs); color: var(--color-light-muted); margin-top: 10px; }
+    .path-list { margin-top: 22px; display: grid; gap: 10px; }
+    .path { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 14px; border-radius: 14px; background: var(--color-bg-soft); border: 1px solid #dfeaff; }
+    .path b { font-size: var(--fs-sm); }
+    .path small { color: var(--color-light-muted); font-weight: 700; }
+
+    section { padding: 78px 0; }
+    .section-head { max-width: 760px; margin-bottom: 34px; }
+    .section-kicker { color: var(--color-primary); font-size: var(--fs-sm); font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
+    h2 { font-size: 42px; line-height: 1.08; letter-spacing: -0.05em; font-weight: 900; color: var(--color-black); }
+    .section-head p { margin-top: 14px; color: var(--color-muted); font-size: var(--fs-md); }
+    .features { background: #fff; }
+    .feature-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .feature-card { background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 24px; min-height: 210px; box-shadow: var(--shadow-soft); transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .feature-card:hover { transform: translateY(-5px); box-shadow: 0 24px 50px rgba(16,24,40,0.12); }
+    .icon { width: 44px; height: 44px; border-radius: 14px; background: var(--color-primary-soft); color: var(--color-primary); display: grid; place-items: center; font-weight: 900; font-size: 20px; margin-bottom: 18px; }
+    .feature-card h3 { font-size: 20px; line-height: 1.2; letter-spacing: -0.03em; margin-bottom: 10px; }
+    .feature-card p { color: var(--color-light-muted); font-size: var(--fs-sm); }
+
+    .projects { background: var(--color-bg-soft); }
+    .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .project { display: flex; gap: 18px; align-items: center; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-soft); }
+    .project-thumb { flex: 0 0 88px; height: 88px; border-radius: 20px; background: linear-gradient(135deg, var(--color-primary), #51b6ff); display: grid; place-items: center; color: white; font-size: 30px; font-weight: 900; }
+    .project h3 { font-size: 19px; line-height: 1.25; letter-spacing: -0.025em; }
+    .project p { margin-top: 7px; color: var(--color-light-muted); font-size: var(--fs-sm); }
+
+    .community { background: linear-gradient(135deg, #101828, #0a2b66); color: white; }
+    .community-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 46px; align-items: center; }
+    .community h2 { color: white; }
+    .community p { color: #d6e2f7; font-size: var(--fs-md); margin-top: 14px; }
+    .community-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .community-stat { padding: 24px; border-radius: var(--radius-md); background: rgba(255,255,255,0.10); border: 1px solid rgba(255,255,255,0.16); backdrop-filter: blur(10px); }
+    .community-stat strong { font-size: 34px; display: block; letter-spacing: -0.04em; }
+    .community-stat span { color: #c8d7ef; font-size: var(--fs-sm); font-weight: 700; }
+
+    .cta-band { padding: 48px 0; background: var(--color-bg-cream); }
+    .cta-box { display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #fff; border: 1px solid #ffe2ad; border-radius: var(--radius-lg); padding: 32px; box-shadow: 0 18px 50px rgba(154,92,0,0.10); }
+    .cta-box h2 { font-size: 32px; }
+    .cta-box p { color: var(--color-muted); margin-top: 8px; }
+
+    footer { background: var(--color-footer); color: var(--color-footer-text); padding: 58px 0 24px; }
+    .footer-grid { display: grid; grid-template-columns: 1.35fr repeat(4, 1fr); gap: 34px; }
+    .footer .logo { color: white; margin-bottom: 16px; }
+    .footer-brand p { font-size: var(--fs-sm); color: var(--color-footer-text); max-width: 330px; }
+    .address { margin-top: 18px; font-size: var(--fs-xs); color: #98a6bd; line-height: 1.65; }
+    .socials { display: flex; gap: 10px; margin-top: 20px; }
+    .socials a { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: rgba(255,255,255,0.08); color: #fff; font-size: var(--fs-xs); font-weight: 900; }
+    .socials a:hover { background: var(--color-primary); transform: translateY(-2px); }
+    .footer h3 { color: #fff; font-size: var(--fs-base); margin-bottom: 14px; }
+    .footer li { margin-bottom: 10px; }
+    .footer a { color: var(--color-footer-text); font-size: var(--fs-sm); }
+    .footer a:hover { color: #fff; }
+    .footer-bottom { margin-top: 44px; padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.10); display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; font-size: var(--fs-xs); color: #98a6bd; }
+    .legal { display: flex; gap: 18px; }
+
+    @media (max-width: 980px) {
+      :root { --fs-hero: 48px; }
+      .nav-links, .nav-actions { display: none; }
+      .hamburger { display: flex; }
+      .mobile-open .nav-links { position: absolute; left: 20px; right: 20px; top: 86px; display: grid; gap: 16px; padding: 22px; background: #fff; border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); }
+      .mobile-open .nav-actions { position: absolute; left: 42px; right: 42px; top: 360px; display: grid; }
+      .hero-grid, .community-grid { grid-template-columns: 1fr; }
+      .feature-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 768px) {
+      :root { --fs-hero: 42px; --fs-xl: 28px; }
+      .container { width: min(100% - 28px, var(--container)); }
+      nav { height: 68px; }
+      .hero { padding: 58px 0 48px; }
+      .hero-text { font-size: var(--fs-base); }
+      .hero-actions, .cta-box { align-items: stretch; flex-direction: column; }
+      .btn { width: 100%; }
+      .stats, .feature-grid, .project-grid, .community-stats, .footer-grid { grid-template-columns: 1fr; }
+      h2 { font-size: 34px; }
+      section { padding: 56px 0; }
+      .project { align-items: flex-start; }
+      .footer-bottom { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header id="siteHeader">
+    <nav class="container" aria-label="Primary navigation">
+      <a href="#top" class="logo" aria-label="Scaler home"><span class="logo-mark">S</span><span>Scaler</span></a>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#program">PROGRAM</a></li>
+        <li><a href="#masterclass">MASTERCLASS</a></li>
+        <li><a href="#ai-labs">AI LABS</a></li>
+        <li><a href="#alumni">ALUMNI</a></li>
+        <li><a href="#resources">RESOURCES</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a class="btn btn-primary" href="#callback">Request A Callback</a>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero" id="program">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span>AI-Integrated Curriculum</div>
+          <h1>Modern Software and <span>AI Engineering.</span></h1>
+          <p class="hero-text">AI did not replace engineers. It raised the bar for what they can do. Build fundamentals-first software engineering skills with AI labs, evaluated projects, mock interviews, and lifelong learning support.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#callback">Request A Callback</a>
+            <a class="btn btn-outline" href="#masterclass">Register for a Free Masterclass</a>
+          </div>
+          <div class="stats" aria-label="Scaler Academy highlights">
+            <div class="stat"><strong>37,000+</strong><span>tech professionals in the Scaler network</span></div>
+            <div class="stat"><strong>0.1%</strong><span>top practitioners guiding learners</span></div>
+            <div class="stat"><strong>10-12</strong><span>month role-based learning paths</span></div>
+          </div>
+        </div>
+        <aside class="hero-card" id="callback" aria-label="Callback form">
+          <div class="hero-card-top">
+            <div>
+              <div class="card-title">Ready to upskill in Modern Software and AI Engineering?</div>
+            </div>
+            <span class="live-badge">Free</span>
+          </div>
+          <form class="form-card">
+            <input class="input" type="text" placeholder="Enter your name" aria-label="Name">
+            <input class="input" type="email" placeholder="Enter email address" aria-label="Email">
+            <input class="input" type="tel" placeholder="Phone number" aria-label="Phone number">
+            <button class="btn btn-primary" type="button">Request A Callback</button>
+          </form>
+          <p class="card-note">A Scaler advisor will help you find the right AI path for your role.</p>
+          <div class="path-list">
+            <div class="path"><b>Beginner</b><small>12 months · No prior coding</small></div>
+            <div class="path"><b>Intermediate</b><small>12 months · Some coding experience</small></div>
+            <div class="path"><b>Advanced</b><small>10 months · DSA background</small></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="features" id="ai-labs">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">Software Engineering Has Changed</div>
+          <h2>So has this program.</h2>
+          <p>This is not an AI content library. It is a system built around AI-era progress, practice, evaluation, and career readiness.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><div class="icon">AI</div><h3>AI-Led Curriculum</h3><p>AI-first structured curriculum rebuilt for modern software engineering roles.</p></article>
+          <article class="feature-card"><div class="icon">M</div><h3>AI Mock Interviews</h3><p>Practice for real hiring environments with feedback, accountability, and role-specific preparation.</p></article>
+          <article class="feature-card"><div class="icon">P</div><h3>AI-Driven Project Portfolio</h3><p>Every project ships with an AI layer. You learn it, use it, and get evaluated on it.</p></article>
+          <article class="feature-card"><div class="icon">∞</div><h3>Unlock Lifelong Learning</h3><p>The program ends; your access does not. Keep learning as the industry changes.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects" id="masterclass">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-kicker">Projects and Masterclass</div>
+          <h2>Every project ships with an AI layer. That is the new bar.</h2>
+          <p>Build practical applications spanning fullstack development, backend systems, APIs, frontend interfaces, and AI-powered product experiences.</p>
+        </div>
+        <div class="project-grid">
+          <article class="project"><div class="project-thumb">L</div><div><h3>LinkForge AI - Your AI-Powered Link-in-Bio & Digital Hub</h3><p>Create a modern AI-enhanced digital hub with production-ready engineering patterns.</p></div></article>
+          <article class="project"><div class="project-thumb">S</div><div><h3>SkyAI Advisor: Smart Weather App</h3><p>Integrate smart recommendations and real-world APIs into an AI-first user experience.</p></div></article>
+          <article class="project"><div class="project-thumb">K</div><div><h3>Kanban Board: Trello Styled Application</h3><p>Design frontend workflows, state management, collaboration features, and scalable UI patterns.</p></div></article>
+          <article class="project"><div class="project-thumb">M</div><div><h3>ShowKart: AI MERN Capstone Project</h3><p>Ship a fullstack MERN capstone with an AI layer and evaluated portfolio outcomes.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="community" id="alumni">
+      <div class="container community-grid">
+        <div>
+          <div class="section-kicker">Alumni and Community</div>
+          <h2>37,000+ tech professionals. Your next network.</h2>
+          <p>Scaler Academy combines practitioners, peer community, accountability, and career support into a professional network built for the next decade.</p>
+        </div>
+        <div class="community-stats">
+          <div class="community-stat"><strong>SDE</strong><span>SDEs, QA Engineers & Frontend Developers</span></div>
+          <div class="community-stat"><strong>2-6 yrs</strong><span>Fullstack Developers, Backend & API Engineers</span></div>
+          <div class="community-stat"><strong>3-8 yrs</strong><span>Software Engineers, Senior Engineers & Tech Leads</span></div>
+          <div class="community-stat"><strong>5-10+</strong><span>Solution Engineers & AI-First Product Builders</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band" id="resources">
+      <div class="container cta-box">
+        <div>
+          <h2>Register for a Free Masterclass</h2>
+          <p>Know more about Scaler Academy: Modern Software and AI Engineering.</p>
+        </div>
+        <a class="btn btn-primary" href="#callback">Request A Callback</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#top" class="logo"><span class="logo-mark">S</span><span>Scaler</span></a>
+          <p>Modern Software and AI Engineering for learners who want to build, practice, and grow with AI-era skills.</p>
+          <p class="address">Interviewbit Software Services Private Limited<br>5th Floor, Surya Park II, 14, 3rd Cross, Parappana Agrahara, Electronic City Rd, Electronics City Phase 1, Bengaluru, Karnataka 560100</p>
+          <div class="socials"><a href="#">YT</a><a href="#">IN</a><a href="#">FB</a><a href="#">IG</a><a href="#">X</a></div>
+        </div>
+        <div>
+          <h3>Explore Scaler</h3>
+          <ul><li><a href="#program">Modern Software and AI Engineering</a></li><li><a href="#">Modern Data Science and ML with Specialisation in AI</a></li><li><a href="#">DevOps, Cloud & AI Platform Engineering</a></li><li><a href="#">Advanced AI & Machine Learning with Agentic AI</a></li></ul>
+        </div>
+        <div>
+          <h3>Resources</h3>
+          <ul><li><a href="#alumni">Alumni Reviews</a></li><li><a href="#">Blogs</a></li><li><a href="#callback">Contact Us</a></li><li><a href="#">Careers</a></li></ul>
+        </div>
+        <div>
+          <h3>Others</h3>
+          <ul><li><a href="#">About Us</a></li><li><a href="#">Become a Mentor</a></li><li><a href="#">Become a TA</a></li><li><a href="#">Hire From Us</a></li></ul>
+        </div>
+        <div>
+          <h3>Trending Courses</h3>
+          <ul><li><a href="#">AI Engineering Advanced Certification</a></li><li><a href="#">Online PGP in Business and AI</a></li><li><a href="#">Masters in Software Development</a></li><li><a href="#">Tutorial</a></li><li><a href="#">Career Advice Resources</a></li></ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© Interviewbit Software Services Private Limited. All rights reserved.</span>
+        <div class="legal"><a href="#">Terms of Use</a><a href="#">Privacy Policy</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.getElementById('siteHeader');
+    const nav = document.querySelector('nav');
+    const hamburger = document.getElementById('hamburger');
+
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 60) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    hamburger.addEventListener('click', () => {
+      nav.classList.toggle('mobile-open');
+    });
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(event) {
+        const targetId = this.getAttribute('href');
+        if (targetId.length > 1) {
+          const target = document.querySelector(targetId);
+          if (target) {
+            event.preventDefault();
+            nav.classList.remove('mobile-open');
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>

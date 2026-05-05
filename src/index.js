@@ -9,21 +9,27 @@ const rl = readline.createInterface({
 
 const prompt = (q) => new Promise((res) => rl.question(q, res));
 
-console.log("╔══════════════════════════════════════╗");
-console.log("║   🤖  Scaler Clone — AI Agent CLI    ║");
-console.log("║   Type exit to quit                  ║");
-console.log("╚══════════════════════════════════════╝\n");
+async function main() {
+  console.clear();
+  console.log("\x1b[36m╔══════════════════════════════════════╗\x1b[0m");
+  console.log("\x1b[36m║   🚀  Scaler Clone — AI Agent CLI    ║\x1b[0m");
+  console.log("\x1b[36m║   Type 'exit' to quit                ║\x1b[0m");
+  console.log("\x1b[36m╚══════════════════════════════════════╝\x1b[0m\n");
 
-while (true) {
-  const input = (await prompt("You: ")).trim();
+  while (true) {
+   
+    const input = (await prompt("\x1b[35mYou › \x1b[0m")).trim();
 
-  if (!input) continue;
+    if (!input) continue;
 
-  if (input === "exit" || input === "quit") {
-    console.log("Bye!");
-    rl.close();
-    process.exit(0);
+    if (input.toLowerCase() === "exit" || input.toLowerCase() === "quit") {
+      console.log("\x1b[32m Goodbye!\x1b[0m");
+      rl.close();
+      process.exit(0);
+    }
+
+    await runAgent(input);
   }
-
-  await runAgent(input);
 }
+
+main(); 
